@@ -1,0 +1,35 @@
+.id-input-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.id-input__label {
+    padding-bottom: 0.25em;
+}
+
+.id-input__container {
+    width: 100%;
+    font-size: 14px;
+    display: flex;
+    gap: 0.3em;
+}
+
+.id-input__input {
+    padding: 0.5em 1em;
+    border: none;
+    flex-grow: 1;
+}
+.id-input__button {
+    width: 6em;
+    padding: 0.5em 1em;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    background: var(--accent);
+    font-weight: bold;
+}
+
+.id-input__button:hover {
+    background: var(--accent-active);
+}
