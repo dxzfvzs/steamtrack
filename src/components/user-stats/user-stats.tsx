@@ -18,15 +18,17 @@ export enum Tabs {
 }
 
 export default function UserStats() {
-    const {user: {id, vanity}} = useUserIdContext();
     const [selectedCard, setSelectedCard] = useState(Tabs.DEFAULT);
-    const {data, isLoading} = useUserGames(id);
 
-    const progress = 90;
+    const {user} = useUserIdContext();
+    const {data, isLoading} = useUserGames(user?.id);
 
-    if (!id) {
+    if (!user) {
         return <></>;
     }
+    const {id, vanity, username, picture } = user;
+    const progress = 90;
+
 
     if (isLoading) return <p>Loading games...</p>;
 
@@ -39,7 +41,7 @@ export default function UserStats() {
                 </div>
 
                 <ClickableStatCard cardType={Tabs.DEFAULT} cardUseState={{selectedCard, setSelectedCard}}
-                                   hint={vanity ? "User: " : "SteamID: "} value={vanity ? vanity : id}/>
+                                   hint={vanity || username ? "User: " : "SteamID: "} value={username ? username : (vanity ? vanity : id)}/>
                 <ClickableStatCard cardType={Tabs.ALL_GAMES} cardUseState={{selectedCard, setSelectedCard}}
                                    hint="All games: " value={data?.counts.allGames || 0}/>
                 <ClickableStatCard cardType={Tabs.GAMES_WITHOUT_ACHIEVEMENTS} cardUseState={{selectedCard, setSelectedCard}}

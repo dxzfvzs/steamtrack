@@ -11,29 +11,35 @@
     color: var(--neutral);
     overflow: hidden;
 }
-.game-table th:nth-child(1), .game-table td:nth-child(1),
-.game-table th:nth-child(3), .game-table td:nth-child(3),
-.game-table th:nth-child(4), .game-table td:nth-child(4) {
-    max-width: 5em; /* Adjust this value as needed */
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+
 
 .game-table-body {
     padding: 1em;
 }
 
+.id-th, .ach-th {
+    width: 8em;
+}
+
+.time-th {
+    width: 12em;
+}
+
 td {
     padding: 0.1em;
+    height: auto;
 }
 
 th {
     padding: 1em;
 }
 
+.sortable {
+    cursor: pointer;
+}
+
 .body-tr {
-    padding: 1em;
-    border-radius: var(--border-radius);
+        border-radius: var(--border-radius);
     background: var(--subtle);
 }
 
@@ -51,17 +57,42 @@ th {
     background: var(--secondary);
 }
 
+.center {
+    text-align: center;
+}
 
 .boring {
     background: var(--neutral);
     padding: 0.6em;
     border-radius: var(--border-radius);
     opacity: 0.5;
-    flex-grow: 1;
     width: 100%;
     display: inline-block;
+    height: 100%;
 }
 .empty {
     opacity: 0.2;
     color: var(--neutral);
+}
+.loading {
+    display: inline-flex;
+    align-items: center;
+}
+.loading::after {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: auto;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    color: var(--secondary);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }

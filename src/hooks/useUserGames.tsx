@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllOwnedGames } from "@/api/all-games-fetcher";
 
-export function useUserGames(userId: string) {
+export function useUserGames(userId?: string) {
     return useQuery({
         queryKey: ["userGames", userId],
         queryFn: async () => {
+            if (!userId) throw new Error("User ID is required");
             const data = await getAllOwnedGames(userId);
 
             const categorizedGames = {
@@ -12,7 +13,7 @@ export function useUserGames(userId: string) {
                 gamesWithAchievements: data.games.filter(game => game.has_community_visible_stats),
                 gamesWithoutAchievements: data.games.filter(game => !game.has_community_visible_stats),
                 neverPlayedGames: data.games.filter(game => game.playtime_forever === 0),
-                completedGames: data.games,
+                completedGames: data.games.filter(game => game.has_community_visible_stats).filter(game => game.total_achievements?.every(a => a.unlocked)),
             };
 
             return {
@@ -26,6 +27,7 @@ export function useUserGames(userId: string) {
                 }
             };
         },
-        staleTime: 1000 * 60 * 5,
+        staleTime: 1000 * 60 * 5 * 1000,
+        enabled: Boolean(userId)
     });
 }

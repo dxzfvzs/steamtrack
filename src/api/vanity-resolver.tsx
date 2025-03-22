@@ -8,6 +8,23 @@ interface SteamApiIdResponse {
     };
 }
 
+interface SteamApiExtraUserInfoResponse {
+    response: {
+        players: {
+            personaname: string;
+            avatarfull: string
+        }[]
+    };
+}
+
+export const getExtraUserInfo = async (id: string): Promise<{ username?: string, picture?: string }> => {
+    const key = process.env.STEAM_KEY;
+    const url = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${key}&steamids=${id}`;
+    const response = await fetch(url);
+    const data: SteamApiExtraUserInfoResponse = await response.json();
+    return {username: data.response.players[0].personaname, picture: data.response.players[0].avatarfull};
+}
+
 export const getUserIdFromVanity = async (vanity: string): Promise<{ ok: boolean, id?: string, message?: string }> => {
     const key = process.env.STEAM_KEY;
     const url = `https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${key}&vanityurl=${vanity}`;

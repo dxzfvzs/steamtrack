@@ -1,21 +1,28 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import {createContext, ReactNode, useContext, useState} from "react";
+
+interface User {
+    id: string,
+    vanity?: string,
+    username?: string,
+    picture?: string,
+}
 
 const UserIdContext = createContext<{
-    user: {id: string, vanity: string};
-    setUser: (id: string, vanity: string) => void;
+    user: User | null;
+    setUser: (user: User | null) => void;
 } | null>(null);
 
-export function UserIdProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUserState] = useState<{ id: string; vanity: string }>({ id: "", vanity: "" });
+export function UserIdProvider({children}: { children: ReactNode }) {
+    const [user, setUserState] = useState<User | null>(null);
 
-    const setUser = (id: string, vanity: string) => {
-        setUserState({ id, vanity });
+    const setUser = (user: User | null) => {
+        setUserState(user);
     };
 
     return (
-        <UserIdContext.Provider value={{ user, setUser }}>
+        <UserIdContext.Provider value={{user, setUser}}>
             {children}
         </UserIdContext.Provider>
     );

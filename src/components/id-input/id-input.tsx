@@ -2,12 +2,20 @@
 
 import "./id-input.css";
 import {useUserIdContext} from "@/hooks/userId";
-import {FormEvent, useRef, useState} from "react";
-import {getUserIdFromVanity} from "@/api/vanity-resolver";
+import {Dispatch, FormEvent, SetStateAction, useRef, useState} from "react";
+import {getExtraUserInfo, getUserIdFromVanity} from "@/api/vanity-resolver";
 import ErrorBox from "@/components/error/error-box";
 
 const isSteamId = (id: string) => {
     return id.length == 17 && /^[0-9]+$/.test(id);
+}
+
+const resolveUserId = async (vanity: string, setMessage: Dispatch<SetStateAction<string>>) => {
+    const response = await getUserIdFromVanity(vanity);
+    if (!response.ok) {
+        setMessage(response.message ? response.message : "Error while resolving user id.");
+    }
+    return response.id;
 }
 
 export default function IdInput() {
@@ -18,25 +26,22 @@ export default function IdInput() {
     const handleInputSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         e.stopPropagation();
+        setMessage("");
 
         const inputValue = inputRef.current?.value;
         if (!inputValue) {
             return;
         }
 
-        if (isSteamId(inputValue)) {
-            setUser(inputValue, "");
-        } else {
-            const response = await getUserIdFromVanity(inputValue);
-            if (!response.ok) {
-                setMessage(response.message ? response.message : "Error while resolving user id.");
-                setUser("", "");
-            }
-            if (response.id) {
-                setUser(response.id, inputValue);
-                setMessage("");
-            }
+        const id = await resolveUserId(inputValue, setMessage);
+        if (!id) {
+            setUser(null);
+            return;
         }
+
+        const vanity = isSteamId(inputValue) ? undefined : inputValue;
+        const {username, picture} = await getExtraUserInfo(id);
+        setUser({id, vanity, username, picture});
     };
 
     return (
@@ -53,7 +58,7 @@ export default function IdInput() {
                 </form>
             </div>
             {message &&
-                <ErrorBox message={message} />
+                <ErrorBox message={message}/>
             }
         </>
     );

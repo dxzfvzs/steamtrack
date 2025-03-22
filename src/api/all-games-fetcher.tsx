@@ -1,5 +1,11 @@
 "use server"
 
+export interface Achievement {
+    id: string;
+    name: string;
+    unlocked: boolean;
+}
+
 interface SteamAPIResponse {
     response: {
         game_count: number;
@@ -23,6 +29,7 @@ export interface Games {
     img_logo_url: string;
     img_icon_url: string;
     has_community_visible_stats: boolean;
+    total_achievements?: Achievement[];
 }
 
 export const getAllOwnedGames = async (id: string): Promise<{ game_count: number, games: Games[] }> => {
@@ -34,7 +41,15 @@ export const getAllOwnedGames = async (id: string): Promise<{ game_count: number
         const data: SteamAPIResponse = await response.json();
 
         if (data.response) {
-            return {game_count: data.response.game_count, games: data.response.games};
+            return {
+                game_count: data.response.game_count, games: data.response.games.map(game => {
+                    if (!game.has_community_visible_stats) {
+                        return {...game, total_achievements: []};
+                    } else {
+                        return game;
+                    }
+                })
+            };
         }
 
         return {game_count: 0, games: []};
