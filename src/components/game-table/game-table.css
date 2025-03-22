@@ -44,7 +44,13 @@ th {
     padding: 0.6em;
     border-radius: var(--border-radius);
     display: inline-block;
+    text-decoration: none;
 }
+
+.interesting:hover {
+    background: var(--secondary);
+}
+
 
 .boring {
     background: var(--neutral);
