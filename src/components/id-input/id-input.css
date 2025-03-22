@@ -1,3 +1,7 @@
+.id-input-section {
+    margin-top: 1em;
+}
+
 .id-input-form {
     display: flex;
     flex-direction: column;
@@ -10,15 +14,16 @@
 
 .id-input__container {
     width: 100%;
-    font-size: 14px;
     display: flex;
     gap: 0.3em;
+    font-size: 15px;
 }
 
 .id-input__input {
     padding: 0.5em 1em;
     border: none;
     flex-grow: 1;
+    font-size: inherit;
 }
 .id-input__button {
     width: 6em;
@@ -28,6 +33,7 @@
     cursor: pointer;
     background: var(--accent);
     font-weight: bold;
+    font-size: inherit;
 }
 
 .id-input__button:hover {

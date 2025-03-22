@@ -1,0 +1,61 @@
+.game-table {
+    text-align: left;
+    border-collapse: collapse;
+    width: 100%;
+    border: none;
+    table-layout: auto;
+}
+
+.game-table--header {
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    color: var(--neutral);
+    overflow: hidden;
+}
+.game-table th:nth-child(1), .game-table td:nth-child(1),
+.game-table th:nth-child(3), .game-table td:nth-child(3),
+.game-table th:nth-child(4), .game-table td:nth-child(4) {
+    max-width: 5em; /* Adjust this value as needed */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.game-table-body {
+    padding: 1em;
+}
+
+td {
+    padding: 0.1em;
+}
+
+th {
+    padding: 1em;
+}
+
+.body-tr {
+    padding: 1em;
+    border-radius: var(--border-radius);
+    background: var(--subtle);
+}
+
+.interesting {
+    background: linear-gradient(to right, var(--secondary), var(--secondary-highlight));
+    font-weight: bold;
+    color: var(--neutral);
+    padding: 0.6em;
+    border-radius: var(--border-radius);
+    display: inline-block;
+}
+
+.boring {
+    background: var(--neutral);
+    padding: 0.6em;
+    border-radius: var(--border-radius);
+    opacity: 0.5;
+    flex-grow: 1;
+    width: 100%;
+    display: inline-block;
+}
+.empty {
+    opacity: 0.2;
+    color: var(--neutral);
+}

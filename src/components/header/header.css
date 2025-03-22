@@ -2,7 +2,8 @@
     background-color: var(--primary);
     color: var(--neutral);
     width: 100%;
-    box-shadow: var(--primary) 5px 10px 15px var(--primary) ;
+    box-shadow: var(--primary) 5px 10px 15px var(--primary);
+    margin-bottom: 1em;
 }
 
 .header-content {

@@ -1,0 +1,20 @@
+.error-message {
+    width: 100%;
+    background: var(--accent);
+    padding: 1em;
+    animation: errorFadeIn 0.3s ease-out;
+}
+
+@keyframes errorFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

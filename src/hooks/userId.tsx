@@ -3,15 +3,19 @@
 import { createContext, useContext, useState } from "react";
 
 const UserIdContext = createContext<{
-    userId: string;
-    setUserId: (id: string) => void;
+    user: {id: string, vanity: string};
+    setUser: (id: string, vanity: string) => void;
 } | null>(null);
 
 export function UserIdProvider({ children }: { children: React.ReactNode }) {
-    const [userId, setUserId] = useState<string>("");
+    const [user, setUserState] = useState<{ id: string; vanity: string }>({ id: "", vanity: "" });
+
+    const setUser = (id: string, vanity: string) => {
+        setUserState({ id, vanity });
+    };
 
     return (
-        <UserIdContext.Provider value={{ userId, setUserId }}>
+        <UserIdContext.Provider value={{ user, setUser }}>
             {children}
         </UserIdContext.Provider>
     );
