@@ -4,6 +4,7 @@
     width: 100%;
     border: none;
     table-layout: auto;
+    height: 1px;
 }
 
 .game-table--header {
@@ -27,7 +28,9 @@
 
 td {
     padding: 0.1em;
-    height: auto;
+}
+td.span {
+    height: 100%;
 }
 
 th {
