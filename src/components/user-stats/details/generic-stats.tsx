@@ -4,7 +4,11 @@ import "./detailed-stats.css";
 import {useUserIdContext} from "@/hooks/userId";
 
 export default function GenericStats() {
-    const {user: {id, vanity, username, picture}} = useUserIdContext();
+    const {user} = useUserIdContext();
+    if (!user) {
+        return <></>;
+    }
+    const {id, vanity, username, picture} = user;
 
     const url = `https://steamcommunity.com/profiles/${id}/`;
 

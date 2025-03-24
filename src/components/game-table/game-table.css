@@ -42,7 +42,7 @@ th {
 }
 
 .body-tr {
-        border-radius: var(--border-radius);
+    border-radius: var(--border-radius);
     background: var(--subtle);
 }
 
@@ -73,6 +73,18 @@ th {
     display: inline-block;
     height: 100%;
 }
+
+.boring-link {
+    text-decoration: none;
+    color: inherit;
+}
+.boring-link:hover {
+    color: var(--secondary);
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
 .empty {
     opacity: 0.2;
     color: var(--neutral);

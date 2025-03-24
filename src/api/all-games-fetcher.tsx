@@ -1,16 +1,16 @@
 "use server"
 
 export interface Achievement {
-    id: string;
-    name: string;
-    unlocked: boolean;
+    achieved: boolean,
+    name: string,
+    description: string,
 }
 
 interface SteamAPIResponse {
     response: {
         game_count: number;
         games: {
-            appid: string;
+            appid: number;
             name: string;
             playtime_2weeks: number;
             playtime_forever: number;
@@ -21,18 +21,17 @@ interface SteamAPIResponse {
     };
 }
 
-export interface Games {
-    appid: string;
+export interface Game {
+    appid: number;
     name: string;
     playtime_2weeks: number;
     playtime_forever: number;
     img_logo_url: string;
     img_icon_url: string;
     has_community_visible_stats: boolean;
-    total_achievements?: Achievement[];
 }
 
-export const getAllOwnedGames = async (id: string): Promise<{ game_count: number, games: Games[] }> => {
+export const getAllOwnedGames = async (id: string): Promise<{ game_count: number, games: Game[] }> => {
     const key = process.env.STEAM_KEY;
 
     const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${key}&steamid=${id}&format=json&include_appinfo=true&include_played_free_games=true`;

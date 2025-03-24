@@ -8,19 +8,26 @@ export interface ClickableStatCardProps {
     cardType: Tabs;
     hint: string;
     value: number | string;
+    isLoading?: boolean;
 }
 
+const getClassName = (card: Tabs, selectedCard: Tabs, isLoading?: boolean): string => {
+    const base = "statbox statbox-clickable";
+    const active = card === selectedCard ? "statbox--active" : "";
+    const loading = isLoading ? "disabled" : "clickable";
+    return `${base} ${active} ${loading}`;
+};
 
-export default function ClickableStatCard({cardUseState, cardType, hint, value}: ClickableStatCardProps) {
-
-    const classname = cardUseState.selectedCard === cardType
-        ? "statbox statbox-clickable statbox--active"
-        : "statbox statbox-clickable";
-
+export default function ClickableStatCard({cardUseState, cardType, hint, value, isLoading}: ClickableStatCardProps) {
     return (
-        <div className={classname} onClick={() => cardUseState.setSelectedCard(cardType)}>
+        <div className={getClassName(cardUseState.selectedCard, cardType, isLoading)} onClick={() => {
+            if (!isLoading) {
+                cardUseState.setSelectedCard(cardType)
+            }
+        }}>
             <span className="stat-summary--subtle-text">{hint}</span>
-            <span className="stat-summary--main-text">{value}</span>
+            {isLoading ? <span className="loading-spinner"></span> :
+                <span className="stat-summary--main-text">{value}</span>}
         </div>
     )
 }

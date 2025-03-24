@@ -18,6 +18,8 @@ interface SteamApiExtraUserInfoResponse {
 }
 
 export const getExtraUserInfo = async (id: string): Promise<{ username?: string, picture?: string }> => {
+    if (!id) return {};
+
     const key = process.env.STEAM_KEY;
     const url = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${key}&steamids=${id}`;
     const response = await fetch(url);

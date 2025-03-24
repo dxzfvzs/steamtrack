@@ -2,10 +2,11 @@
 
 import "./user-stats.css";
 import {useUserIdContext} from "@/hooks/userId";
-import {useState} from "react";
-import ExtendedStats from "@/components/user-stats/extended-stats";
+import {useEffect, useState} from "react";
+import ExtendedStats from "@/components/user-stats/details/extended-stats";
 import ClickableStatCard from "@/components/user-stats/clickable-stat-card";
 import {useUserGames} from "@/hooks/useUserGames";
+import {Achievement} from "@/api/all-games-fetcher";
 
 export enum Tabs {
     DEFAULT,
@@ -19,41 +20,51 @@ export enum Tabs {
 
 export default function UserStats() {
     const [selectedCard, setSelectedCard] = useState(Tabs.DEFAULT);
+    const [progress, setProgress] = useState(0);
 
     const {user} = useUserIdContext();
-    const {data, isLoading} = useUserGames(user?.id);
+    const {userGames, achievementData, loading} = useUserGames(user?.id);
 
-    if (!user) {
-        return <></>;
-    }
-    const {id, vanity, username, picture } = user;
-    const progress = 90;
+    if (!user || !achievementData) return <></>;
+
+    const {id, vanity, username, picture} = user;
 
 
-    if (isLoading) return <p>Loading games...</p>;
 
     return (
         <>
             <div className="stat-summary-container">
+
                 <div
-                    className={`statbox statbox-static ${progress <= 30 ? "progress-bad" : `${progress >= 70 ? "progress-good" : "progress-neutral"}`}`}>
-                    <span className={`stat-summary--main-text`}>{progress}%</span>
+                    className={`statbox statbox-static ${progress <= 30 ? "progress-bad" : `${progress >= 70 ? "progress-good" : "progress-neutral"}`}`}
+                >
+                    {loading ? <div className="loading-spinner"></div> :
+                        <span className="stat-summary--main-text">{progress}%</span>}
                 </div>
 
+
                 <ClickableStatCard cardType={Tabs.DEFAULT} cardUseState={{selectedCard, setSelectedCard}}
-                                   hint={vanity || username ? "User: " : "SteamID: "} value={username ? username : (vanity ? vanity : id)}/>
-                <ClickableStatCard cardType={Tabs.ALL_GAMES} cardUseState={{selectedCard, setSelectedCard}}
-                                   hint="All games: " value={data?.counts.allGames || 0}/>
-                <ClickableStatCard cardType={Tabs.GAMES_WITHOUT_ACHIEVEMENTS} cardUseState={{selectedCard, setSelectedCard}}
-                                   hint="Has no achievements: " value={data?.counts.gamesWithoutAchievements || 0}/>
-                <ClickableStatCard cardType={Tabs.GAMES_WITH_ACHIEVEMENTS} cardUseState={{selectedCard, setSelectedCard}}
-                                   hint="Has achievements: " value={data?.counts.gamesWithAchievements || 0}/>
-                <ClickableStatCard cardType={Tabs.NEVER_PLAYED_GAMES} cardUseState={{selectedCard, setSelectedCard}}
-                                   hint="Never played: " value={data?.counts.neverPlayedGames || 0}/>
-                <ClickableStatCard cardType={Tabs.COMPLETED_GAMES} cardUseState={{selectedCard, setSelectedCard}}
-                                   hint="Completed games: " value={data?.counts.completedGames || 0}/>
-                <ClickableStatCard cardType={Tabs.ACHIEVEMENTS} cardUseState={{selectedCard, setSelectedCard}}
-                                   hint="Achievements: " value={0}/>
+                                   hint={vanity || username ? "User: " : "SteamID: "}
+                                   value={username ? username : (vanity ? vanity : id)}/>
+
+                <ClickableStatCard hint="All games: " cardType={Tabs.ALL_GAMES}
+                                   cardUseState={{selectedCard, setSelectedCard}}
+                                   value={achievementData.length}/>
+                <ClickableStatCard hint="Has no achievements: " cardType={Tabs.GAMES_WITHOUT_ACHIEVEMENTS}
+                                   cardUseState={{selectedCard, setSelectedCard}}
+                                   value={achievementData.filter(game => !game.game.has_community_visible_stats).length}/>
+                <ClickableStatCard hint="Has achievements: " cardType={Tabs.GAMES_WITH_ACHIEVEMENTS}
+                                   cardUseState={{selectedCard, setSelectedCard}}
+                                   value={achievementData.filter(game => game.game.has_community_visible_stats).length}/>
+                <ClickableStatCard hint="Never played: " cardType={Tabs.NEVER_PLAYED_GAMES}
+                                   cardUseState={{selectedCard, setSelectedCard}}
+                                   value={achievementData.filter(game => game.game.playtime_forever === 0).length}/>
+                <ClickableStatCard hint="Completed games: " cardType={Tabs.COMPLETED_GAMES} isLoading={loading}
+                                   cardUseState={{selectedCard, setSelectedCard}}
+                                   value={achievementData.filter(game => game.achievements && game.achievements.length > 0 && game.achievements.every(a => a.achieved)).length}/>
+                <ClickableStatCard hint="Achievements: " cardType={Tabs.ACHIEVEMENTS} isLoading={loading}
+                                   cardUseState={{selectedCard, setSelectedCard}}
+                                   value={0}/>
 
             </div>
             <ExtendedStats selectedCard={selectedCard}/>

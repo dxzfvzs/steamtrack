@@ -2,13 +2,18 @@
 
 import "./detailed-stats.css";
 import GameTable from "@/components/game-table/game-table";
-import {Games} from "@/api/all-games-fetcher";
+import {AchievementData} from "@/hooks/useUserGames";
 
-export default function GameStats({data}: { data: Games[] }) {
+interface GameStatsProps {
+    data: AchievementData[]
+}
+
+export default function GameStats({data}: GameStatsProps) {
+    const games = data.map(game => game.game);
     return (
         <div className="section section--stats round-border ">
             <div className="generic-stats">
-                <GameTable data={data} />
+                <GameTable data={data}/>
             </div>
         </div>
     )

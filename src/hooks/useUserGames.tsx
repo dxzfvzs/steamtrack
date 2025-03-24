@@ -1,33 +1,53 @@
-import { useQuery } from "@tanstack/react-query";
-import { getAllOwnedGames } from "@/api/all-games-fetcher";
+import {useEffect, useState} from "react";
+import {Achievement, Game, getAllOwnedGames} from "@/api/all-games-fetcher";
+import {getAchievementOfGame} from "@/api/achievement-fetcher";
+
+export interface AchievementData {
+    game: Game,
+    achievements: Achievement[] | undefined
+}
 
 export function useUserGames(userId?: string) {
-    return useQuery({
-        queryKey: ["userGames", userId],
-        queryFn: async () => {
-            if (!userId) throw new Error("User ID is required");
+    const [userGames, setUserGames] = useState<Game[]>([]);
+    const [achievementData, setAchievementData] = useState<AchievementData[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        if (!userId) {
+            setUserGames([]);
+            return;
+        }
+
+        const fetchUserGames = async () => {
             const data = await getAllOwnedGames(userId);
+            setUserGames(data.games);
+            setAchievementData(data.games.map(game => {
+                return {game: game, achievements: game.has_community_visible_stats ? undefined : []}
+            }));
+        };
 
-            const categorizedGames = {
-                allGames: data.games,
-                gamesWithAchievements: data.games.filter(game => game.has_community_visible_stats),
-                gamesWithoutAchievements: data.games.filter(game => !game.has_community_visible_stats),
-                neverPlayedGames: data.games.filter(game => game.playtime_forever === 0),
-                completedGames: data.games.filter(game => game.has_community_visible_stats).filter(game => game.total_achievements?.every(a => a.unlocked)),
-            };
+        void fetchUserGames();
+    }, [userId]);
 
-            return {
-                games: categorizedGames,
-                counts: {
-                    allGames: data.game_count,
-                    gamesWithAchievements: categorizedGames.gamesWithAchievements.length,
-                    gamesWithoutAchievements: categorizedGames.gamesWithoutAchievements.length,
-                    neverPlayedGames: categorizedGames.neverPlayedGames.length,
-                    completedGames: categorizedGames.completedGames.length,
-                }
-            };
-        },
-        staleTime: 1000 * 60 * 5 * 1000,
-        enabled: Boolean(userId)
-    });
+    useEffect(() => {
+        setLoading(true);
+        const fetchAchievements = async () => {
+            const achievements = await Promise.all(
+                userGames.map(async (game: Game) => {
+                    if (!game.has_community_visible_stats) {
+                        return {game, achievements: []};
+                    }
+                    const achievementData = await getAchievementOfGame(userId!, game.appid);
+                    return {game, achievements: achievementData};
+                })
+            );
+            setAchievementData(achievements);
+            setLoading(false);
+        };
+
+        void fetchAchievements();
+    }, [userGames, userId]);
+
+
+    return {userGames, achievementData, loading};
 }
