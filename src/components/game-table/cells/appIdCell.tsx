@@ -1,5 +1,5 @@
 "use client"
-import "./game-table.css";
+import "../game-table.css";
 
 interface AppIdCellProps {
     appid: number

@@ -1,10 +1,10 @@
 "use client"
 import "./game-table.css";
-import PlaytimeCell from "@/components/game-table/playtimecell";
-import AchievementCell from "@/components/game-table/achievementcell";
+import PlaytimeCell from "@/components/game-table/cells/playtimecell";
+import AchievementCell from "@/components/game-table/cells/achievementcell";
 import {AchievementData} from "@/hooks/useUserGames";
-import AppIdCell from "@/components/game-table/appIdCell";
-import NameCell from "@/components/game-table/nameCell";
+import AppIdCell from "@/components/game-table/cells/appIdCell";
+import NameCell from "@/components/game-table/cells/nameCell";
 import {useState} from "react";
 
 interface GameTableProps {
