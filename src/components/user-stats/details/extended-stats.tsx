@@ -2,7 +2,7 @@
 
 import "../user-stats.css";
 import GenericStats from "@/components/user-stats/details/generic-stats";
-import {Tabs} from "@/components/user-stats/user-stats";
+import {Tabs} from "@/components/user-stats/user-stats-overview";
 import GameStats from "@/components/user-stats/details/games";
 import {useUserGames} from "@/hooks/useUserGames";
 import {useUserIdContext} from "@/hooks/userId";

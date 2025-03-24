@@ -5,7 +5,7 @@ import AchievementCell from "@/components/game-table/cells/achievementcell";
 import {AchievementData} from "@/hooks/useUserGames";
 import AppIdCell from "@/components/game-table/cells/appIdCell";
 import NameCell from "@/components/game-table/cells/nameCell";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 interface GameTableProps {
     data: AchievementData[]
@@ -27,8 +27,8 @@ function castTableData(data: AchievementData[]) {
             name: aData.game.name,
             playtime2Week: aData.game.playtime_2weeks,
             playtimeForever: aData.game.playtime_forever,
-            achievements: !aData.achievements ? undefined : aData.achievements.length,
-            totalAchievements: !aData.achievements ? undefined : aData.achievements.length,
+            achievements: !aData.achievements ? undefined : aData.achievementStats.achieved,
+            totalAchievements: !aData.achievements ? undefined : aData.achievementStats.total,
         }
     })
 }
@@ -38,6 +38,10 @@ const ascendingDefaults = ["name"];
 export default function GameTable({data}: GameTableProps) {
     const [sortConfig, setSortConfig] = useState<{ key: keyof GameData; ascending: boolean } | null>(null);
     const [tableData, setTableData] = useState<GameData[]>(castTableData(data));
+
+    useEffect(() => {
+        setTableData(castTableData(data));
+    }, [data]);
 
     const handleSort = (key: keyof GameData) => {
         let ascending = sortConfig && sortConfig.key === key ? !sortConfig.ascending : ascendingDefaults.includes(key);

@@ -2,9 +2,16 @@ import {useEffect, useState} from "react";
 import {Achievement, Game, getAllOwnedGames} from "@/api/all-games-fetcher";
 import {getAchievementOfGame} from "@/api/achievement-fetcher";
 
+export interface AchievementStats {
+    total: number;
+    achieved: number;
+    progress: number;
+}
+
 export interface AchievementData {
     game: Game,
-    achievements: Achievement[] | undefined
+    achievements: Achievement[] | undefined,
+    achievementStats: AchievementStats,
 }
 
 export function useUserGames(userId?: string) {
@@ -22,7 +29,11 @@ export function useUserGames(userId?: string) {
             const data = await getAllOwnedGames(userId);
             setUserGames(data.games);
             setAchievementData(data.games.map(game => {
-                return {game: game, achievements: game.has_community_visible_stats ? undefined : []}
+                return {
+                    game: game,
+                    achievements: game.has_community_visible_stats ? undefined : [],
+                    achievementStats: {total: 0, achieved: 0, progress: 0},
+                }
             }));
         };
 
@@ -41,9 +52,14 @@ export function useUserGames(userId?: string) {
             for (const game of gamesWithStats) {
                 const achievements = await getAchievementOfGame(userId, game.appid);
 
+                const total = achievements.length;
+                const achieved = achievements.filter(a => a.achieved).length;
+                const progress = total > 0 ? achieved / total : 0;
+                const achievementStats: AchievementStats = {total, achieved, progress};
+
                 setAchievementData((prevData) =>
                     prevData.map((item) =>
-                        item.game.appid === game.appid ? { ...item, achievements } : item
+                        item.game.appid === game.appid ? {achievements, achievementStats, game: item.game} : item
                     )
                 );
             }

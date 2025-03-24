@@ -2,9 +2,9 @@
 
 import "./user-stats.css";
 import {useUserIdContext} from "@/hooks/userId";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ExtendedStats from "@/components/user-stats/details/extended-stats";
-import ClickableStatCard from "@/components/user-stats/clickable-stat-card";
+import ClickableStatCard from "@/components/user-stats/statcards/clickableStatCard";
 import {useUserGames} from "@/hooks/useUserGames";
 
 export enum Tabs {
@@ -17,18 +17,32 @@ export enum Tabs {
     ACHIEVEMENTS,
 }
 
-export default function UserStats() {
+export default function UserStatsOverview() {
     const [selectedCard, setSelectedCard] = useState(Tabs.DEFAULT);
     const [progress, setProgress] = useState(0);
-
     const {user} = useUserIdContext();
-    const {userGames, achievementData, loading} = useUserGames(user?.id);
+    const {achievementData, loading} = useUserGames(user?.id);
+
+    useEffect(() => {
+        if (loading) {
+            return;
+        }
+
+        let validGames = 0;
+        let total = 0;
+        achievementData.forEach((game) => {
+            if (game.achievementStats.total > 0) {
+                validGames++;
+                total += game.achievementStats.progress;
+            }
+        })
+
+        setProgress(Math.round(validGames > 0 ? validGames / total : 0));
+
+    }, [achievementData, loading]);
 
     if (!user || !achievementData) return <></>;
-
     const {id, vanity, username, picture} = user;
-
-
 
     return (
         <>
@@ -63,7 +77,7 @@ export default function UserStats() {
                                    value={achievementData.filter(game => game.achievements && game.achievements.length > 0 && game.achievements.every(a => a.achieved)).length}/>
                 <ClickableStatCard hint="Achievements: " cardType={Tabs.ACHIEVEMENTS} isLoading={loading}
                                    cardUseState={{selectedCard, setSelectedCard}}
-                                   value={0}/>
+                                   value={achievementData.reduce((acc, data) => acc + data.achievementStats.achieved, 0)}/>
 
             </div>
             <ExtendedStats selectedCard={selectedCard}/>
