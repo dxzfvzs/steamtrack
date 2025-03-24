@@ -2,11 +2,10 @@
 
 import "./user-stats.css";
 import {useUserIdContext} from "@/hooks/userId";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import ExtendedStats from "@/components/user-stats/details/extended-stats";
 import ClickableStatCard from "@/components/user-stats/clickable-stat-card";
 import {useUserGames} from "@/hooks/useUserGames";
-import {Achievement} from "@/api/all-games-fetcher";
 
 export enum Tabs {
     DEFAULT,

@@ -30,18 +30,24 @@ export function useUserGames(userId?: string) {
     }, [userId]);
 
     useEffect(() => {
+        if (!userId) {
+            return;
+        }
+
         setLoading(true);
         const fetchAchievements = async () => {
-            const achievements = await Promise.all(
-                userGames.map(async (game: Game) => {
-                    if (!game.has_community_visible_stats) {
-                        return {game, achievements: []};
-                    }
-                    const achievementData = await getAchievementOfGame(userId!, game.appid);
-                    return {game, achievements: achievementData};
-                })
-            );
-            setAchievementData(achievements);
+            const gamesWithStats = userGames.filter((game) => game.has_community_visible_stats);
+
+            for (const game of gamesWithStats) {
+                const achievements = await getAchievementOfGame(userId, game.appid);
+
+                setAchievementData((prevData) =>
+                    prevData.map((item) =>
+                        item.game.appid === game.appid ? { ...item, achievements } : item
+                    )
+                );
+            }
+
             setLoading(false);
         };
 

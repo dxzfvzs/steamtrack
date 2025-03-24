@@ -11,6 +11,9 @@ const isSteamId = (id: string) => {
 }
 
 const resolveUserId = async (vanity: string, setMessage: Dispatch<SetStateAction<string>>) => {
+    if (isSteamId(vanity)) {
+        return vanity;
+    }
     const response = await getUserIdFromVanity(vanity);
     if (!response.ok) {
         setMessage(response.message ? response.message : "Error while resolving user id.");

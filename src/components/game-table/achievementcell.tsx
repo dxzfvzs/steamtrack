@@ -1,20 +1,15 @@
 "use client"
 import "./game-table.css";
-import {Achievement} from "@/api/all-games-fetcher";
 
 interface AchievementCellProps {
-    achievements: Achievement[] | undefined
+    achievements: number | undefined
 }
 
-const getAchievementClassname = (total_achievements: Achievement[] | undefined) => {
-    const base = "boring center ";
-    if (!total_achievements) {
-        return base + "loading";
-    }
-    if (total_achievements.length == 0) {
-        return base + "empty";
-    }
-    return base;
+const getAchievementClassname = (achievements: number | undefined) => {
+    const base = "boring center";
+    const empty = achievements == 0 ? "empty" : "";
+    const undef = achievements == undefined ? "loading" : "";
+    return `${base} ${empty} ${undef}`;
 }
 
 
@@ -22,7 +17,7 @@ export default function AchievementCell({achievements}: AchievementCellProps) {
     return (
         <td>
             <span className={getAchievementClassname(achievements)}>
-                {!achievements ? "" : achievements.length || 0}
+                {!achievements ? "" : achievements}
             </span>
         </td>
     )

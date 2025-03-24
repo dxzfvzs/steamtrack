@@ -1,4 +1,4 @@
-.game-table {
+.table {
     text-align: left;
     border-collapse: collapse;
     width: 100%;
@@ -7,14 +7,14 @@
     height: 1px;
 }
 
-.game-table--header {
+.table--header {
     background: linear-gradient(to right, var(--primary), var(--secondary));
     color: var(--neutral);
     overflow: hidden;
 }
 
 
-.game-table-body {
+.table--body {
     padding: 1em;
 }
 

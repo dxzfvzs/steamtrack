@@ -38,7 +38,7 @@ export const getUserIdFromVanity = async (vanity: string): Promise<{ ok: boolean
         if (data.response.success === 1) {
             return {ok: true, id: data.response.steamid};
         }
-        return {ok: false, message: data.response.message};
+        return {ok: false, message: data.response.message + " (resolving id from vanity)"};
 
     } catch (e) {
         return {ok: false, message: "Failed to fetch user id from Vanity"};

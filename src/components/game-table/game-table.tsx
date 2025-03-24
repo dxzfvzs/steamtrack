@@ -1,39 +1,58 @@
 "use client"
 import "./game-table.css";
-import {Achievement, Game} from "@/api/all-games-fetcher";
-import {useMemo, useState} from "react";
 import PlaytimeCell from "@/components/game-table/playtimecell";
 import AchievementCell from "@/components/game-table/achievementcell";
 import {AchievementData} from "@/hooks/useUserGames";
-
-
-const sortingConfig: Record<string, { key: keyof Game; ascending: boolean }> = {
-    name: {key: "name", ascending: false},
-    playtime_2weeks: {key: "playtime_2weeks", ascending: true},
-    playtime_forever: {key: "playtime_forever", ascending: true},
-};
-
-const sortGames = (data: AchievementData[], sortConfig: { key: keyof Game; ascending: boolean } | null) => {
-    if (!sortConfig) return data;
-    return [...data].sort((a, b) => {
-        const valA = a.game[sortConfig.key] ?? 0;
-        const valB = b.game[sortConfig.key] ?? 0;
-        return valA < valB ? (sortConfig.ascending ? 1 : -1) : valA > valB ? (sortConfig.ascending ? -1 : 1) : 0;
-    });
-};
+import AppIdCell from "@/components/game-table/appIdCell";
+import NameCell from "@/components/game-table/nameCell";
+import {useState} from "react";
 
 interface GameTableProps {
     data: AchievementData[]
 }
 
-export default function GameTable({data}: GameTableProps) {
-    const [sortConfig, setSortConfig] = useState<{ key: keyof Game; ascending: boolean } | null>(null);
-    const sortedData = useMemo(() => sortGames(data, sortConfig), [data, sortConfig]);
+interface GameData {
+    appid: number,
+    name: string,
+    achievements: number | undefined,
+    totalAchievements: number | undefined,
+    playtime2Week: number,
+    playtimeForever: number,
+}
 
-    const handleSort = (key: keyof Game) => {
-        setSortConfig((prev) => ({
-            key, ascending: prev?.key === key ? !prev.ascending : sortingConfig[key].ascending,
-        }));
+function castTableData(data: AchievementData[]) {
+    return data.map((aData) => {
+        return {
+            appid: aData.game.appid,
+            name: aData.game.name,
+            playtime2Week: aData.game.playtime_2weeks,
+            playtimeForever: aData.game.playtime_forever,
+            achievements: !aData.achievements ? undefined : aData.achievements.length,
+            totalAchievements: !aData.achievements ? undefined : aData.achievements.length,
+        }
+    })
+}
+
+const ascendingDefaults = ["name"];
+
+export default function GameTable({data}: GameTableProps) {
+    const [sortConfig, setSortConfig] = useState<{ key: keyof GameData; ascending: boolean } | null>(null);
+    const [tableData, setTableData] = useState<GameData[]>(castTableData(data));
+
+    const handleSort = (key: keyof GameData) => {
+        let ascending = sortConfig && sortConfig.key === key ? !sortConfig.ascending : ascendingDefaults.includes(key);
+
+        const sortedData = [...tableData].sort((a, b) => {
+            const valA = a[key] ?? 0;
+            const valB = b[key] ?? 0;
+
+            if (valA < valB) return ascending ? -1 : 1;
+            if (valA > valB) return ascending ? 1 : -1;
+            return 0;
+        });
+
+        setSortConfig({ key, ascending });
+        setTableData(sortedData);
     };
 
     if (data.length == 0) {
@@ -41,36 +60,37 @@ export default function GameTable({data}: GameTableProps) {
     }
 
     return (
-        <table className="game-table">
-            <thead className="game-table--header">
+        <table className="table">
+
+            <thead className="table--header">
             <tr>
-                <th className="sortable id-th">App ID</th>
+                <th className="id-th">App ID</th>
                 <th onClick={() => handleSort("name")} className="sortable gamename">Name</th>
 
-                <th onClick={() => handleSort("playtime_2weeks")} className="sortable ach-th">Completed</th>
-                <th onClick={() => handleSort("playtime_2weeks")} className="sortable ach-th">Total A.</th>
+                <th onClick={() => handleSort("achievements")} className="sortable ach-th">Completed</th>
+                <th onClick={() => handleSort("totalAchievements")} className="sortable ach-th">Total A.</th>
 
-                <th onClick={() => handleSort("playtime_2weeks")} className="sortable time-th">Playtime (2 Weeks)</th>
-                <th onClick={() => handleSort("playtime_forever")} className="sortable time-th">Playtime (Forever)</th>
+                <th onClick={() => handleSort("playtime2Week")} className="sortable time-th">Playtime (2 Weeks)</th>
+                <th onClick={() => handleSort("playtimeForever")} className="sortable time-th">Playtime (Forever)</th>
             </tr>
             </thead>
-            <tbody className="game-table-body">
-            {sortedData.map(({game, achievements}, index) => (
+
+            <tbody className="table--body">
+            {tableData.map((entry, index) => (
                 <tr className="body-tr" key={index}>
 
-                    <td><a href={`https://store.steampowered.com/app/${game.appid}`} target="_blank"
-                           className="boring boring-link">{game.appid}</a></td>
-                    <td><a href={`https://store.steampowered.com/app/${game.appid}`} target="_blank"
-                           className="interesting">{game.name}</a></td>
+                    <AppIdCell appid={entry.appid}/>
+                    <NameCell appid={entry.appid} name={entry.name}/>
 
-                    <AchievementCell achievements={achievements?.filter(a => a.achieved)}/>
-                    <AchievementCell achievements={achievements}/>
+                    <AchievementCell achievements={entry.achievements}/>
+                    <AchievementCell achievements={entry.totalAchievements}/>
 
-                    <PlaytimeCell time={game.playtime_2weeks}/>
-                    <PlaytimeCell time={game.playtime_forever}/>
+                    <PlaytimeCell time={entry.playtime2Week}/>
+                    <PlaytimeCell time={entry.playtimeForever}/>
                 </tr>
             ))}
             </tbody>
+
         </table>
     )
 }
