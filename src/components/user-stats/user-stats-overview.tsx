@@ -6,13 +6,15 @@ import {useEffect, useState} from "react";
 import ExtendedStats from "@/components/user-stats/details/extended-stats";
 import ClickableStatCard from "@/components/user-stats/statcards/clickableStatCard";
 import {useUserGames} from "@/hooks/useUserGames";
+import {hasAchievements, isCompleted, isInProgress, noProgress} from "@/evaluator";
 
 export enum Tabs {
     DEFAULT,
     ALL_GAMES,
     GAMES_WITH_ACHIEVEMENTS,
     GAMES_WITHOUT_ACHIEVEMENTS,
-    NEVER_PLAYED_GAMES,
+    NO_PROGRESS,
+    IN_PROGRESS,
     COMPLETED_GAMES,
     ACHIEVEMENTS,
 }
@@ -22,6 +24,10 @@ export default function UserStatsOverview() {
     const [progress, setProgress] = useState(0);
     const {user} = useUserIdContext();
     const {achievementData, loading} = useUserGames(user?.id);
+
+    useEffect(() => {
+        setSelectedCard(Tabs.DEFAULT);
+    }, [user]);
 
     useEffect(() => {
         if (loading) {
@@ -38,18 +44,17 @@ export default function UserStatsOverview() {
         })
 
         setProgress(Math.round(validGames > 0 ? total / validGames : 0));
-
     }, [achievementData, loading]);
 
     if (!user || !achievementData) return <></>;
-    const {id, vanity, username, picture} = user;
+    const {id, vanity, username} = user;
 
     return (
         <>
             <div className="stat-summary-container">
 
                 <div
-                    className={`statbox statbox-static ${progress <= 30 ? "progress-bad" : `${progress >= 70 ? "progress-good" : "progress-neutral"}`}`}
+                    className={`statbox statbox-static ${progress <= 35 ? "progress-bad" : `${progress >= 70 ? "progress-good" : "progress-neutral"}`}`}
                 >
                     {loading ? <div className="loading-spinner"></div> :
                         <span className="stat-summary--main-text">{progress}%</span>}
@@ -63,18 +68,23 @@ export default function UserStatsOverview() {
                 <ClickableStatCard hint="All games: " cardType={Tabs.ALL_GAMES}
                                    cardUseState={{selectedCard, setSelectedCard}}
                                    value={achievementData.length}/>
-                <ClickableStatCard hint="Has no achievements: " cardType={Tabs.GAMES_WITHOUT_ACHIEVEMENTS}
+
+                <ClickableStatCard hint="With achievements: " cardType={Tabs.GAMES_WITH_ACHIEVEMENTS} isLoading={loading}
                                    cardUseState={{selectedCard, setSelectedCard}}
-                                   value={achievementData.filter(game => !game.game.has_community_visible_stats).length}/>
-                <ClickableStatCard hint="Has achievements: " cardType={Tabs.GAMES_WITH_ACHIEVEMENTS}
+                                   value={achievementData.filter(game => hasAchievements(game)).length}/>
+
+                <ClickableStatCard hint="No progress: " cardType={Tabs.NO_PROGRESS} isLoading={loading}
                                    cardUseState={{selectedCard, setSelectedCard}}
-                                   value={achievementData.filter(game => game.game.has_community_visible_stats).length}/>
-                <ClickableStatCard hint="Never played: " cardType={Tabs.NEVER_PLAYED_GAMES}
+                                   value={achievementData.filter(game => noProgress(game)).length}/>
+
+                <ClickableStatCard hint="In Progress: " cardType={Tabs.IN_PROGRESS} isLoading={loading}
                                    cardUseState={{selectedCard, setSelectedCard}}
-                                   value={achievementData.filter(game => game.game.playtime_forever === 0).length}/>
+                                   value={achievementData.filter(game => isInProgress(game)).length}/>
+
                 <ClickableStatCard hint="Completed games: " cardType={Tabs.COMPLETED_GAMES} isLoading={loading}
                                    cardUseState={{selectedCard, setSelectedCard}}
-                                   value={achievementData.filter(game => game.achievementStats.progress === 100).length}/>
+                                   value={achievementData.filter(game => isCompleted(game)).length}/>
+
                 <ClickableStatCard hint="Achievements: " cardType={Tabs.ACHIEVEMENTS} isLoading={loading}
                                    cardUseState={{selectedCard, setSelectedCard}}
                                    value={achievementData.reduce((acc, data) => acc + data.achievementStats.achieved, 0)}/>

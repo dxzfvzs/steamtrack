@@ -6,6 +6,7 @@ import {AchievementData} from "@/hooks/useUserGames";
 import AppIdCell from "@/components/game-table/cells/appIdCell";
 import NameCell from "@/components/game-table/cells/nameCell";
 import {useEffect, useState} from "react";
+import AchievementProgressCell from "@/components/game-table/cells/percentCell";
 
 interface GameTableProps {
     data: AchievementData[]
@@ -16,19 +17,21 @@ interface GameData {
     name: string,
     achievements: number | undefined,
     totalAchievements: number | undefined,
+    progress: number,
     playtime2Week: number,
     playtimeForever: number,
 }
 
-function castTableData(data: AchievementData[]) {
+function castTableData(data: AchievementData[]): GameData[] {
     return data.map((aData) => {
         return {
             appid: aData.game.appid,
             name: aData.game.name,
             playtime2Week: aData.game.playtime_2weeks,
             playtimeForever: aData.game.playtime_forever,
-            achievements: aData.achievementStats.valid ? aData.achievementStats.achieved :  undefined,
-            totalAchievements:aData.achievementStats.valid ? aData.achievementStats.total :  undefined,
+            progress: aData.achievementStats.progress,
+            achievements: aData.achievementStats.valid ? aData.achievementStats.achieved : undefined,
+            totalAchievements:aData.achievementStats.valid ? aData.achievementStats.total : undefined,
         }
     })
 }
@@ -71,8 +74,10 @@ export default function GameTable({data}: GameTableProps) {
                 <th className="id-th">App ID</th>
                 <th onClick={() => handleSort("name")} className="sortable gamename">Name</th>
 
-                <th onClick={() => handleSort("achievements")} className="sortable ach-th">Completed</th>
-                <th onClick={() => handleSort("totalAchievements")} className="sortable ach-th">Total A.</th>
+                <th onClick={() => handleSort("achievements")} className="sortable ach-th">Achieved</th>
+                <th onClick={() => handleSort("totalAchievements")} className="sortable ach-th">Total</th>
+
+                <th onClick={() => handleSort("progress")} className="sortable ach-th">Average</th>
 
                 <th onClick={() => handleSort("playtime2Week")} className="sortable time-th">Playtime (2 Weeks)</th>
                 <th onClick={() => handleSort("playtimeForever")} className="sortable time-th">Playtime (Forever)</th>
@@ -88,6 +93,8 @@ export default function GameTable({data}: GameTableProps) {
 
                     <AchievementCell achievements={entry.achievements}/>
                     <AchievementCell achievements={entry.totalAchievements}/>
+
+                    <AchievementProgressCell progress={entry.progress} achieved={entry.achievements}/>
 
                     <PlaytimeCell time={entry.playtime2Week}/>
                     <PlaytimeCell time={entry.playtimeForever}/>

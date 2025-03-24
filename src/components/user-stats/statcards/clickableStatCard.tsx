@@ -32,10 +32,12 @@ export default function ClickableStatCard({cardUseState, cardType, hint, value, 
             <span className="stat-summary--subtle-text">
                 {hint}
             </span>
-            {isLoading
-                ? <span className="loading-spinner"></span>
-                : <span className="stat-summary--main-text">{value}</span>
-            }
+            <span className="stat-summary--main-text">
+                {value}
+                {isLoading && (
+                    <div className="loading-spinner"></div>
+                )}
+            </span>
         </div>
     )
 }

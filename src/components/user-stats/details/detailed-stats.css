@@ -9,6 +9,17 @@
     border-radius: var(--border-radius);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
+    gap: 1em;
+}
+
+.generic-stats__picture {
+    background: var(--primary);
+    padding: 1em;
+    border-radius: var(--border-radius);
+}
+
+.generic-stats__account {
+    display: flex;
     flex-direction: column;
     gap: 0.3em;
 }

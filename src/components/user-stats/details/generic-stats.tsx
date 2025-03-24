@@ -15,26 +15,30 @@ export default function GenericStats() {
     return (
         <div className="section section--stats round-border ">
             <div className="generic-stats">
-
-                {username &&
-                    <div className="info-snippet">
-                        <span className="bold">Username: </span>
-                        <span>{username}</span>
-                    </div>
-                }
-                {vanity &&
-                    <div className="info-snippet">
-                        <span className="bold">Vanity: </span>
-                        <span>{vanity}</span>
-                    </div>
-                }
-                <div className="info-snippet">
-                    <span className="bold">SteamID: </span>
-                    <span>{id}</span>
+                <div className="generic-stats__picture">
+                    <img src={picture} alt="" />
                 </div>
-                <div className="info-snippet">
-                    <span className="bold">Link to profile: </span>
-                    <a className="link" href={url}>{url}</a>
+                <div className="generic-stats__account">
+                    {username &&
+                        <div className="info-snippet">
+                            <span className="bold">Username: </span>
+                            <span>{username}</span>
+                        </div>
+                    }
+                    {vanity &&
+                        <div className="info-snippet">
+                            <span className="bold">Vanity: </span>
+                            <span>{vanity}</span>
+                        </div>
+                    }
+                    <div className="info-snippet">
+                        <span className="bold">SteamID: </span>
+                        <span>{id}</span>
+                    </div>
+                    <div className="info-snippet">
+                        <span className="bold">Link to profile: </span>
+                        <a className="link" href={url}>{url}</a>
+                    </div>
                 </div>
             </div>
         </div>

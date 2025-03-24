@@ -8,7 +8,7 @@ interface AchievementCellProps {
 const getAchievementClassname = (achievements: number | undefined) => {
     const base = "boring center";
     const empty = achievements == 0 ? "empty" : "";
-    const undef = achievements == undefined ? "loading" : "";
+    const undef = achievements === undefined ? "loading" : "";
     return `${base} ${empty} ${undef}`;
 }
 
@@ -17,7 +17,7 @@ export default function AchievementCell({achievements}: AchievementCellProps) {
     return (
         <td>
             <span className={getAchievementClassname(achievements)}>
-                {!achievements ? "" : achievements}
+                {achievements == undefined ? "" : achievements}
             </span>
         </td>
     )

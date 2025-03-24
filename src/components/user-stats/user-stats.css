@@ -53,6 +53,7 @@
     font-weight: bold;
     text-align: center;
     margin: auto;
+    display: flex;
 }
 
 .progress-bad {
@@ -66,6 +67,9 @@
     background: var(--progress-good);
 }
 
+.disabled {
+    opacity: 0.4;
+}
 .disabled:hover {
     cursor: not-allowed;
 }
@@ -75,13 +79,13 @@
 }
 
 .loading-spinner {
-    width: 1.5em;
-    height: 1.5em;
+    width: 1em;
+    height: 1em;
     border: 3px solid rgba(255, 255, 255, 0.3);
     border-top: 3px solid var(--neutral);
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    margin: auto;
+    margin: auto auto auto 0.2em;
 }
 
 @keyframes spin {

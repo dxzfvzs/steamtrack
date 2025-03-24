@@ -2,11 +2,12 @@
 import "../game-table.css";
 
 interface PlaytimeCellProps {
-    time: number
+    time: number;
 }
 
 const minutesToReadable = (minutes: number): string => {
-    if (minutes === 0) {
+
+    if (!minutes || minutes <= 0) {
         return "0";
     }
 

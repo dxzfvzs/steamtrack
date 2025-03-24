@@ -13,13 +13,13 @@
     overflow: hidden;
 }
 
-
 .table--body {
     padding: 1em;
 }
 
 .id-th, .ach-th {
-    width: 8em;
+    width: 7em;
+    text-align: center;
 }
 
 .time-th {
@@ -110,4 +110,21 @@ th {
     to {
         transform: rotate(360deg);
     }
+}
+
+.progress-bad-text {
+    color: var(--progress-bad);
+    font-weight: bold;
+}
+
+
+.progress-neutral-text {
+    color: var(--progress-neutral);
+    font-weight: bold;
+}
+
+
+.progress-good-text {
+    color: var(--progress-good);
+    font-weight: bold;
 }
