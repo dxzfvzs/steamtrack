@@ -21,12 +21,12 @@ export const getAchievementOfGame = async (id: string, appid: number): Promise<A
 
     const key = process.env.STEAM_KEY;
 
-    const url = `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid=${appid}&key=${key}&steamid=${id}&l=eng`;
+    const url = `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid=${appid}&key=${key}&steamid=${id}`;
     try {
         const response = await fetch(url);
         const data: SteamAPIResponse = await response.json();
 
-        if (!data.playerstats) {
+        if (!data.playerstats || !data.playerstats.achievements) {
             return [];
         }
         return data.playerstats.achievements;

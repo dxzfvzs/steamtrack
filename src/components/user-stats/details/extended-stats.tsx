@@ -26,8 +26,7 @@ export default function ExtendedStats({selectedCard}: { selectedCard: Tabs, }) {
             {selectedCard == Tabs.GAMES_WITHOUT_ACHIEVEMENTS &&
                 <GameStats data={achievementData.filter(game => !game.game.has_community_visible_stats)}/>}
             {selectedCard == Tabs.COMPLETED_GAMES &&
-                <GameStats
-                    data={achievementData.filter(game => game.achievements && game.achievements.length > 0 && game.achievements.every(a => a.achieved))}/>}
+                <GameStats data={achievementData.filter(game => game.achievementStats.progress === 100)}/>}
             {selectedCard == Tabs.NEVER_PLAYED_GAMES &&
                 <GameStats data={achievementData.filter(game => game.game.playtime_forever === 0)}/>}
         </>

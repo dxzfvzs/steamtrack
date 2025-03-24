@@ -31,13 +31,13 @@ export default function UserStatsOverview() {
         let validGames = 0;
         let total = 0;
         achievementData.forEach((game) => {
-            if (game.achievementStats.total > 0) {
+            if (game.achievementStats.achieved > 0) {
                 validGames++;
                 total += game.achievementStats.progress;
             }
         })
 
-        setProgress(Math.round(validGames > 0 ? validGames / total : 0));
+        setProgress(Math.round(validGames > 0 ? total / validGames : 0));
 
     }, [achievementData, loading]);
 
@@ -74,7 +74,7 @@ export default function UserStatsOverview() {
                                    value={achievementData.filter(game => game.game.playtime_forever === 0).length}/>
                 <ClickableStatCard hint="Completed games: " cardType={Tabs.COMPLETED_GAMES} isLoading={loading}
                                    cardUseState={{selectedCard, setSelectedCard}}
-                                   value={achievementData.filter(game => game.achievements && game.achievements.length > 0 && game.achievements.every(a => a.achieved)).length}/>
+                                   value={achievementData.filter(game => game.achievementStats.progress === 100).length}/>
                 <ClickableStatCard hint="Achievements: " cardType={Tabs.ACHIEVEMENTS} isLoading={loading}
                                    cardUseState={{selectedCard, setSelectedCard}}
                                    value={achievementData.reduce((acc, data) => acc + data.achievementStats.achieved, 0)}/>

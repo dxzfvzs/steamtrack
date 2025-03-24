@@ -27,8 +27,8 @@ function castTableData(data: AchievementData[]) {
             name: aData.game.name,
             playtime2Week: aData.game.playtime_2weeks,
             playtimeForever: aData.game.playtime_forever,
-            achievements: !aData.achievements ? undefined : aData.achievementStats.achieved,
-            totalAchievements: !aData.achievements ? undefined : aData.achievementStats.total,
+            achievements: aData.achievementStats.valid ? aData.achievementStats.achieved :  undefined,
+            totalAchievements:aData.achievementStats.valid ? aData.achievementStats.total :  undefined,
         }
     })
 }

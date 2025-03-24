@@ -2,8 +2,7 @@
 
 export interface Achievement {
     achieved: boolean,
-    name: string,
-    description: string,
+    apiname: string,
 }
 
 interface SteamAPIResponse {
