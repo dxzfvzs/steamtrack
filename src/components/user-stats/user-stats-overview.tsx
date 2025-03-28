@@ -65,7 +65,7 @@ export default function UserStatsOverview() {
                                    hint={vanity || username ? "User: " : "SteamID: "}
                                    value={username ? username : (vanity ? vanity : id)}/>
 
-                <ClickableStatCard hint="All games: " cardType={Tabs.ALL_GAMES}
+                <ClickableStatCard hint="All found games: " cardType={Tabs.ALL_GAMES}
                                    cardUseState={{selectedCard, setSelectedCard}}
                                    value={achievementData.length}/>
 
@@ -82,7 +82,7 @@ export default function UserStatsOverview() {
                                    cardUseState={{selectedCard, setSelectedCard}}
                                    value={achievementData.filter(game => isInProgress(game)).length}/>
 
-                <ClickableStatCard hint="Completed games: " cardType={Tabs.COMPLETED_GAMES} isLoading={loading}
+                <ClickableStatCard hint="100%" cardType={Tabs.COMPLETED_GAMES} isLoading={loading}
                                    cardUseState={{selectedCard, setSelectedCard}}
                                    value={achievementData.filter(game => isCompleted(game)).length}/>
 
