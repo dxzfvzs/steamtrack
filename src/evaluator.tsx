@@ -1,5 +1,6 @@
-import {AchievementData} from "@/hooks/useUserGames";
+import {AchievementData} from "@/types";
 
+// achievements
 export const hasAchievements = (data: AchievementData): boolean => {
     return data.achievementStats.total > 0;
 };
@@ -19,3 +20,8 @@ export const isCompleted = (data: AchievementData): boolean => {
 export const isInProgress = (data: AchievementData): boolean => {
     return hasAchievements(data) && data.achievementStats.achieved > 0 && (data.achievementStats.achieved < data.achievementStats.total);
 };
+
+// steam id approximation
+export const isSteamId = (id: string) => {
+    return id.length == 17 && /^[0-9]+$/.test(id);
+}

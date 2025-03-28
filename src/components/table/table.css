@@ -1,0 +1,134 @@
+.table {
+  text-align: left;
+  border-collapse: collapse;
+  width: 100%;
+  border: none;
+  table-layout: auto;
+  height: 1px;
+}
+
+.table--header {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  color: var(--neutral);
+  overflow: hidden;
+}
+
+.table--body {
+  padding: 1em;
+}
+
+.id-th, .ach-th {
+  width: 7em;
+  text-align: center;
+}
+
+.time-th {
+  width: 12em;
+}
+
+td {
+  padding: 0.1em;
+}
+
+td.span {
+  height: 100%;
+}
+
+th {
+  padding: 1em;
+}
+
+.sortable {
+  cursor: pointer;
+}
+
+.body-tr {
+  border-radius: var(--border-radius);
+  background: var(--subtle);
+}
+
+.interesting {
+  background: linear-gradient(to right, var(--secondary), var(--secondary-highlight));
+  font-weight: bold;
+  color: var(--neutral);
+  padding: 0.6em;
+  border-radius: var(--border-radius);
+  display: inline-block;
+  text-decoration: none;
+}
+
+.interesting:hover {
+  background: var(--secondary);
+}
+
+.center {
+  text-align: center;
+}
+
+.boring {
+  background: var(--neutral);
+  padding: 0.6em;
+  border-radius: var(--border-radius);
+  opacity: 0.5;
+  width: 100%;
+  display: inline-block;
+  height: 100%;
+}
+
+.boring-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.boring-link:hover {
+  color: var(--secondary);
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.empty {
+  opacity: 0.2;
+  color: var(--neutral);
+}
+
+.loading {
+  display: inline-flex;
+  align-items: center;
+}
+
+.loading::after {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: auto;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  color: var(--secondary);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.progress-bad-text {
+  color: var(--progress-bad);
+  font-weight: bold;
+}
+
+
+.progress-neutral-text {
+  color: var(--progress-neutral);
+  font-weight: bold;
+}
+
+
+.progress-good-text {
+  color: var(--progress-good);
+  font-weight: bold;
+}

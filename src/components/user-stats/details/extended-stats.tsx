@@ -6,12 +6,12 @@ import {Tabs} from "@/components/user-stats/user-stats-overview";
 import GameStats from "@/components/user-stats/details/games";
 import {useUserGames} from "@/hooks/useUserGames";
 import {useUserIdContext} from "@/hooks/userId";
-import {isCompleted, hasAchievements, hasNoAchievements, isInProgress, noProgress} from "@/evaluator";
+import {hasAchievements, hasNoAchievements, isCompleted, isInProgress, noProgress} from "@/evaluator";
 
 export default function ExtendedStats({selectedCard}: { selectedCard: Tabs, }) {
 
     const {user} = useUserIdContext();
-    const {userGames, achievementData} = useUserGames(user?.id);
+    const {achievementData} = useUserGames(user?.id);
 
     return (
         <>

@@ -1,47 +1,47 @@
 .section--stats {
-    padding: 1.5em;
-    background: var(--subtle);
+  padding: 1.5em;
+  background: var(--subtle);
 }
 
 .generic-stats {
-    background: rgba(255, 255, 255, 0.7);
-    padding: 1em;
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    gap: 1em;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 1em;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 1em;
 }
 
 .generic-stats__picture {
-    background: var(--primary);
-    padding: 1em;
-    border-radius: var(--border-radius);
+  background: var(--primary);
+  padding: 1em;
+  border-radius: var(--border-radius);
 }
 
 .generic-stats__account {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
 }
 
 .info-snippet {
-    background: var(--subtle);
-    width: fit-content;
-    padding: 0.5em;
-    border-radius: var(--border-radius);
-    text-decoration: none;
+  background: var(--subtle);
+  width: fit-content;
+  padding: 0.5em;
+  border-radius: var(--border-radius);
+  text-decoration: none;
 }
 
 .link {
-    text-decoration: none;
-    cursor: pointer;
-    font-weight: bold;
-    color: var(--secondary);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--secondary);
 
 
 }
 
 .link:hover {
-    text-decoration: underline;
-    color: var(--accent-active);
+  text-decoration: underline;
+  color: var(--accent-active);
 }

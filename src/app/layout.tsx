@@ -1,9 +1,10 @@
 import "./globals.css";
 import "/public/themes/default.css";
 import Header from "@/components/header/header";
+import {ReactNode} from "react";
 
-export default function RootLayout({children,}: Readonly<{
-    children: React.ReactNode;
+export default function RootLayout({children}: Readonly<{
+    children: ReactNode;
 }>) {
     return (
         <html lang="en">
@@ -18,8 +19,8 @@ export default function RootLayout({children,}: Readonly<{
             <Header/>
             <div className="main">{children}</div>
         </main>
-
         </body>
+
         </html>
     );
 }

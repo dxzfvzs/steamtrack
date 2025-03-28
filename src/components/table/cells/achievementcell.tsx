@@ -1,5 +1,5 @@
 "use client"
-import "../game-table.css";
+import "../table.css";
 
 interface AchievementCellProps {
     achievements: number | undefined

@@ -3,12 +3,11 @@
 import "./id-input.css";
 import {useUserIdContext} from "@/hooks/userId";
 import {Dispatch, FormEvent, SetStateAction, useRef, useState} from "react";
-import {getExtraUserInfo, getUserIdFromVanity} from "@/api/vanity-resolver";
+import {getUserIdFromVanity} from "@/api/vanity-resolver";
 import ErrorBox from "@/components/error/error-box";
+import {getExtraUserInfo} from "@/api/extra-user-info-fetcher";
+import {isSteamId} from "@/evaluator";
 
-const isSteamId = (id: string) => {
-    return id.length == 17 && /^[0-9]+$/.test(id);
-}
 
 const resolveUserId = async (vanity: string, setMessage: Dispatch<SetStateAction<string>>) => {
     if (isSteamId(vanity)) {
@@ -48,8 +47,8 @@ export default function IdInput() {
     };
 
     return (
-        <>
-            <div className="section round-border id-input-section">
+        <div className="id-input-section">
+            <div className="section round-border">
                 <form className="id-input-form" onSubmit={handleInputSubmit}>
                     <label className="id-input__label" htmlFor="id-input">Your SteamID or vanity:</label>
                     <div className="id-input__container flex-gap">
@@ -63,6 +62,6 @@ export default function IdInput() {
             {message &&
                 <ErrorBox message={message}/>
             }
-        </>
+        </div>
     );
 }

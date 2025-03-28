@@ -9,15 +9,16 @@ export default function GenericStats() {
         return <></>;
     }
     const {id, vanity, username, picture} = user;
-
     const url = `https://steamcommunity.com/profiles/${id}/`;
 
     return (
         <div className="section section--stats round-border ">
             <div className="generic-stats">
+
                 <div className="generic-stats__picture">
-                    <img src={picture} alt="" />
+                    <img src={picture} alt=""/>
                 </div>
+
                 <div className="generic-stats__account">
                     {username &&
                         <div className="info-snippet">
@@ -31,6 +32,7 @@ export default function GenericStats() {
                             <span>{vanity}</span>
                         </div>
                     }
+
                     <div className="info-snippet">
                         <span className="bold">SteamID: </span>
                         <span>{id}</span>
@@ -40,6 +42,7 @@ export default function GenericStats() {
                         <a className="link" href={url}>{url}</a>
                     </div>
                 </div>
+
             </div>
         </div>
     )

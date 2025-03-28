@@ -1,5 +1,5 @@
 "use client"
-import "../game-table.css";
+import "../table.css";
 
 interface PlaytimeCellProps {
     time: number;

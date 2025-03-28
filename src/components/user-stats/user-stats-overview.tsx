@@ -69,7 +69,8 @@ export default function UserStatsOverview() {
                                    cardUseState={{selectedCard, setSelectedCard}}
                                    value={achievementData.length}/>
 
-                <ClickableStatCard hint="With achievements: " cardType={Tabs.GAMES_WITH_ACHIEVEMENTS} isLoading={loading}
+                <ClickableStatCard hint="With achievements: " cardType={Tabs.GAMES_WITH_ACHIEVEMENTS}
+                                   isLoading={loading}
                                    cardUseState={{selectedCard, setSelectedCard}}
                                    value={achievementData.filter(game => hasAchievements(game)).length}/>
 

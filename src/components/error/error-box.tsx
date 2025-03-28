@@ -1,9 +1,13 @@
 import "./error-box.css";
 
-export default function ErrorBox({ message }: { message: string }) {
+interface ErrorBoxProps {
+    message: string;
+}
+
+export default function ErrorBox({message}: ErrorBoxProps) {
     return (
         <div className="error-message round-border section">
-            Error: {message}
+            <span className="bold">Error:</span> {message}
         </div>
     );
 }

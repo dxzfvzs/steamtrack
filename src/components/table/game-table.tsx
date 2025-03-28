@@ -1,12 +1,12 @@
 "use client"
-import "./game-table.css";
-import PlaytimeCell from "@/components/game-table/cells/playtimecell";
-import AchievementCell from "@/components/game-table/cells/achievementcell";
-import {AchievementData} from "@/hooks/useUserGames";
-import AppIdCell from "@/components/game-table/cells/appIdCell";
-import NameCell from "@/components/game-table/cells/nameCell";
+import "./table.css";
+import PlaytimeCell from "@/components/table/cells/playtimecell";
+import AchievementCell from "@/components/table/cells/achievementcell";
+import AppIdCell from "@/components/table/cells/appIdCell";
+import NameCell from "@/components/table/cells/nameCell";
 import {useEffect, useState} from "react";
-import AchievementProgressCell from "@/components/game-table/cells/percentCell";
+import AchievementProgressCell from "@/components/table/cells/percentCell";
+import {AchievementData} from "@/types";
 
 interface GameTableProps {
     data: AchievementData[]
@@ -15,11 +15,11 @@ interface GameTableProps {
 interface GameData {
     appid: number,
     name: string,
-    achievements: number | undefined,
-    totalAchievements: number | undefined,
-    progress: number,
     playtime2Week: number,
     playtimeForever: number,
+    progress: number,
+    achievedAchievements: number | undefined,
+    totalAchievements: number | undefined,
 }
 
 function castTableData(data: AchievementData[]): GameData[] {
@@ -30,8 +30,8 @@ function castTableData(data: AchievementData[]): GameData[] {
             playtime2Week: aData.game.playtime_2weeks,
             playtimeForever: aData.game.playtime_forever,
             progress: aData.achievementStats.progress,
-            achievements: aData.achievementStats.valid ? aData.achievementStats.achieved : undefined,
-            totalAchievements:aData.achievementStats.valid ? aData.achievementStats.total : undefined,
+            achievedAchievements: aData.achievementStats.fullyLoaded ? aData.achievementStats.achieved : undefined,
+            totalAchievements: aData.achievementStats.fullyLoaded ? aData.achievementStats.total : undefined,
         }
     })
 }
@@ -58,7 +58,7 @@ export default function GameTable({data}: GameTableProps) {
             return 0;
         });
 
-        setSortConfig({ key, ascending });
+        setSortConfig({key, ascending});
         setTableData(sortedData);
     };
 
@@ -72,9 +72,9 @@ export default function GameTable({data}: GameTableProps) {
             <thead className="table--header">
             <tr>
                 <th className="id-th">App ID</th>
-                <th onClick={() => handleSort("name")} className="sortable gamename">Name</th>
+                <th onClick={() => handleSort("name")} className="sortable">Name</th>
 
-                <th onClick={() => handleSort("achievements")} className="sortable ach-th">Achieved</th>
+                <th onClick={() => handleSort("achievedAchievements")} className="sortable ach-th">Achieved</th>
                 <th onClick={() => handleSort("totalAchievements")} className="sortable ach-th">Total</th>
 
                 <th onClick={() => handleSort("progress")} className="sortable ach-th">Average</th>
@@ -91,10 +91,10 @@ export default function GameTable({data}: GameTableProps) {
                     <AppIdCell appid={entry.appid}/>
                     <NameCell appid={entry.appid} name={entry.name}/>
 
-                    <AchievementCell achievements={entry.achievements}/>
+                    <AchievementCell achievements={entry.achievedAchievements}/>
                     <AchievementCell achievements={entry.totalAchievements}/>
 
-                    <AchievementProgressCell progress={entry.progress} achieved={entry.achievements}/>
+                    <AchievementProgressCell progress={entry.progress} achieved={entry.achievedAchievements}/>
 
                     <PlaytimeCell time={entry.playtime2Week}/>
                     <PlaytimeCell time={entry.playtimeForever}/>

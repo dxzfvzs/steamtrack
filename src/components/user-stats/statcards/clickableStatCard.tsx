@@ -34,9 +34,7 @@ export default function ClickableStatCard({cardUseState, cardType, hint, value, 
             </span>
             <span className="stat-summary--main-text">
                 {value}
-                {isLoading && (
-                    <div className="loading-spinner"></div>
-                )}
+                {isLoading && (<div className="loading-spinner"></div>)}
             </span>
         </div>
     )

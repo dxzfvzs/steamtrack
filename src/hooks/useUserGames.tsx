@@ -1,18 +1,7 @@
 import {useEffect, useState} from "react";
-import {Game, getAllOwnedGames} from "@/api/all-games-fetcher";
+import {getAllOwnedGames} from "@/api/all-games-fetcher";
 import {getAchievementOfGame} from "@/api/achievement-fetcher";
-
-export interface AchievementStats {
-    total: number;
-    achieved: number;
-    progress: number;
-    valid: boolean;
-}
-
-export interface AchievementData {
-    game: Game,
-    achievementStats: AchievementStats,
-}
+import {AchievementData, AchievementStats, Game} from "@/types";
 
 export function useUserGames(userId?: string) {
     const [userGames, setUserGames] = useState<Game[]>([]);
@@ -31,7 +20,12 @@ export function useUserGames(userId?: string) {
             setAchievementData(data.games.map(game => {
                 return {
                     game: game,
-                    achievementStats: {total: 0, achieved: 0, progress: 0, valid: !game.has_community_visible_stats},
+                    achievementStats: {
+                        total: 0,
+                        achieved: 0,
+                        progress: 0,
+                        fullyLoaded: !game.has_community_visible_stats
+                    },
                 }
             }));
         };
@@ -54,7 +48,7 @@ export function useUserGames(userId?: string) {
                 const total = achievements.length;
                 const achieved = achievements.filter(a => a.achieved).length;
                 const progress = achieved > 0 ? (achieved / total) * 100 : 0;
-                const achievementStats: AchievementStats = {total, achieved, progress, valid: true};
+                const achievementStats: AchievementStats = {total, achieved, progress, fullyLoaded: true};
 
                 setAchievementData((prevData) =>
                     prevData.map((item) =>
