@@ -64,5 +64,5 @@ export function useUserGames(userId?: string) {
     }, [userGames, userId]);
 
 
-    return {userGames, achievementData, loading};
+    return {userGames, setUserGames, achievementData, loading};
 }

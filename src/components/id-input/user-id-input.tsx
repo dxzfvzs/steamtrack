@@ -4,9 +4,9 @@ import "./id-input.css";
 import {useUserIdContext} from "@/hooks/userId";
 import {Dispatch, FormEvent, SetStateAction, useRef, useState} from "react";
 import {getUserIdFromVanity} from "@/api/vanity-resolver";
-import ErrorBox from "@/components/error/error-box";
 import {getExtraUserInfo} from "@/api/extra-user-info-fetcher";
 import {isSteamId} from "@/evaluator";
+import GenericIdInput from "@/components/id-input/generic-id-input";
 
 
 const resolveUserId = async (vanity: string, setMessage: Dispatch<SetStateAction<string>>) => {
@@ -20,7 +20,7 @@ const resolveUserId = async (vanity: string, setMessage: Dispatch<SetStateAction
     return response.id;
 }
 
-export default function IdInput() {
+export default function UserIdInput() {
     const {setUser} = useUserIdContext();
     const [message, setMessage] = useState<string>("");
     const inputRef = useRef<HTMLInputElement>(null);
@@ -47,21 +47,12 @@ export default function IdInput() {
     };
 
     return (
-        <div className="id-input-section">
-            <div className="section round-border">
-                <form className="id-input-form" onSubmit={handleInputSubmit}>
-                    <label className="id-input__label" htmlFor="id-input">Your SteamID or vanity:</label>
-                    <div className="id-input__container flex-gap">
-                        <input className="id-input__input round-border" type="text" name="id" ref={inputRef}
-                               required={true}
-                               placeholder="Your SteamID or vanity goes here"/>
-                        <button className="id-input__button round-border" type="submit" value="SteamID">Confirm</button>
-                    </div>
-                </form>
-            </div>
-            {message &&
-                <ErrorBox message={message}/>
-            }
-        </div>
+        <GenericIdInput label={"Your SteamID or vanity:"}
+                        placeholder={"Your SteamID or vanity goes here"}
+                        error={message}
+                        toBeRendered={true}
+                        inputRef={inputRef}
+                        handleSubmit={handleInputSubmit}
+        />
     );
 }

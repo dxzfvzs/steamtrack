@@ -1,15 +1,17 @@
 "use client"
 
-import IdInput from "@/components/id-input/id-input";
+import UserIdInput from "@/components/id-input/user-id-input";
 import UserStatsOverview from "@/components/user-stats/user-stats-overview";
 import {UserIdProvider} from "@/hooks/userId";
+import GameIdInput from "@/components/id-input/game-id-input";
 
 export default function Home() {
     return (
         <>
             <UserIdProvider>
                 <UserStatsOverview/>
-                <IdInput/>
+                <GameIdInput/>
+                <UserIdInput/>
             </UserIdProvider>
         </>
     );
