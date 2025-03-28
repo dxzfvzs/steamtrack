@@ -3,16 +3,17 @@
 import "./user-stats.css";
 import {useUserIdContext} from "@/hooks/userId";
 import {useEffect, useState} from "react";
-import ExtendedStats from "@/components/user-stats/details/extended-stats";
+import ExtendedStats from "@/components/user-stats/details/extended-stats-caller";
 import ClickableStatCard from "@/components/user-stats/statcards/clickableStatCard";
 import {useUserGames} from "@/hooks/useUserGames";
-import {hasAchievements, isCompleted, isInProgress, noProgress} from "@/evaluator";
+import {hasAchievements, hasAtLeastOneAchieved, isCompleted, isInProgress, noProgress} from "@/evaluator";
 
 export enum Tabs {
     DEFAULT,
     ALL_GAMES,
     GAMES_WITH_ACHIEVEMENTS,
     GAMES_WITHOUT_ACHIEVEMENTS,
+    COUNTS_TOWARD_GLOBAL,
     NO_PROGRESS,
     IN_PROGRESS,
     COMPLETED_GAMES,
@@ -23,7 +24,7 @@ export default function UserStatsOverview() {
     const [selectedCard, setSelectedCard] = useState(Tabs.DEFAULT);
     const [progress, setProgress] = useState(0);
     const {user} = useUserIdContext();
-    const {achievementData, loading} = useUserGames(user?.id);
+    const {achievementData, loading, processed} = useUserGames();
 
     useEffect(() => {
         setSelectedCard(Tabs.DEFAULT);
@@ -51,8 +52,9 @@ export default function UserStatsOverview() {
 
     return (
         <>
-            <div className="stat-summary-container">
+            {loading && processed && <div className="loading-bar">Loading progress: {processed.progress} / {processed.total}</div>}
 
+            <div className="stat-summary-container">
                 <div
                     className={`statbox statbox-static ${progress <= 35 ? "progress-bad" : `${progress >= 70 ? "progress-good" : "progress-neutral"}`}`}
                 >
@@ -74,6 +76,11 @@ export default function UserStatsOverview() {
                                    cardUseState={{selectedCard, setSelectedCard}}
                                    value={achievementData.filter(game => hasAchievements(game)).length}/>
 
+                <ClickableStatCard hint="Counts towards global" cardType={Tabs.COUNTS_TOWARD_GLOBAL}
+                                   isLoading={loading}
+                                   cardUseState={{selectedCard, setSelectedCard}}
+                                   value={achievementData.filter(game => hasAtLeastOneAchieved(game)).length}/>
+
                 <ClickableStatCard hint="No progress: " cardType={Tabs.NO_PROGRESS} isLoading={loading}
                                    cardUseState={{selectedCard, setSelectedCard}}
                                    value={achievementData.filter(game => noProgress(game)).length}/>
@@ -89,8 +96,8 @@ export default function UserStatsOverview() {
                 <ClickableStatCard hint="Achievements: " cardType={Tabs.ACHIEVEMENTS} isLoading={loading}
                                    cardUseState={{selectedCard, setSelectedCard}}
                                    value={achievementData.reduce((acc, data) => acc + data.achievementStats.achieved, 0)}/>
-
             </div>
+
             <ExtendedStats selectedCard={selectedCard}/>
         </>
 

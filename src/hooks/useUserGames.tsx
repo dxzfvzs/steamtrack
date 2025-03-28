@@ -2,20 +2,23 @@ import {useEffect, useState} from "react";
 import {getAllUserGames} from "@/api/all-games-fetcher";
 import {getAchievementOfGame} from "@/api/achievement-fetcher";
 import {AchievementData, AchievementStats, Game} from "@/types";
+import {useUserIdContext} from "@/hooks/userId";
 
-export function useUserGames(userId?: string) {
+export function useUserGames() {
     const [userGames, setUserGames] = useState<Game[]>([]);
     const [achievementData, setAchievementData] = useState<AchievementData[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [processed, setProcessed] = useState<{ progress: number, total: number } | null>(null);
+    const {user} = useUserIdContext();
 
     useEffect(() => {
-        if (!userId) {
+        if (!user) {
             setUserGames([]);
             return;
         }
 
         const fetchUserGames = async () => {
-            const data = await getAllUserGames(userId);
+            const data = await getAllUserGames(user.id);
             setUserGames(data.games);
             setAchievementData(data.games.map(game => {
                 return {
@@ -26,24 +29,30 @@ export function useUserGames(userId?: string) {
                         progress: 0,
                         fullyLoaded: !game.has_community_visible_stats,
                     },
+                    achievements: [],
                 }
             }));
         };
 
         void fetchUserGames();
-    }, [userId]);
+    }, [user]);
 
     useEffect(() => {
-        if (!userId) {
+        if (!user) {
             return;
         }
 
-        setLoading(true);
         const fetchAchievements = async () => {
+            setLoading(true);
             const gamesWithStats = userGames.filter((game) => game.has_community_visible_stats);
+            const gamesWithStatsCount = gamesWithStats.length;
 
             for (const game of gamesWithStats) {
-                const achievements = await getAchievementOfGame(userId, game.appid);
+                setProcessed(prevState => prevState
+                    ? {progress: prevState.progress + 1, total: gamesWithStatsCount}
+                    : {progress: 1, total: gamesWithStatsCount});
+
+                const achievements = await getAchievementOfGame(user.id, game.appid);
 
                 const total = achievements.length;
                 const achieved = achievements.filter(a => a.achieved).length;
@@ -56,13 +65,12 @@ export function useUserGames(userId?: string) {
                     )
                 );
             }
-
+            setProcessed(null);
             setLoading(false);
         };
 
         void fetchAchievements();
-    }, [userGames, userId]);
+    }, [userGames, user]);
 
-
-    return {userGames, setUserGames, achievementData, loading};
+    return {userGames, setUserGames, achievementData, loading, processed};
 }

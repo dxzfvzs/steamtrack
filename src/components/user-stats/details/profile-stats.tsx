@@ -3,7 +3,7 @@
 import "./detailed-stats.css";
 import {useUserIdContext} from "@/hooks/userId";
 
-export default function GenericStats() {
+export default function ProfileStats() {
     const {user} = useUserIdContext();
     if (!user) {
         return <></>;

@@ -1,22 +1,26 @@
 "use client"
 
 import "../user-stats.css";
-import GenericStats from "@/components/user-stats/details/generic-stats";
+import ProfileStats from "@/components/user-stats/details/profile-stats";
 import {Tabs} from "@/components/user-stats/user-stats-overview";
 import GameStats from "@/components/user-stats/details/games";
 import {useUserGames} from "@/hooks/useUserGames";
-import {useUserIdContext} from "@/hooks/userId";
-import {hasAchievements, hasNoAchievements, isCompleted, isInProgress, noProgress} from "@/evaluator";
+import {
+    hasAchievements,
+    hasAtLeastOneAchieved,
+    hasNoAchievements,
+    isCompleted,
+    isInProgress,
+    noProgress
+} from "@/evaluator";
 
 export default function ExtendedStats({selectedCard}: { selectedCard: Tabs, }) {
-
-    const {user} = useUserIdContext();
-    const {achievementData} = useUserGames(user?.id);
+    const {achievementData} = useUserGames();
 
     return (
         <>
             {selectedCard == Tabs.DEFAULT &&
-                <GenericStats/>}
+                <ProfileStats/>}
 
             {selectedCard == Tabs.ALL_GAMES &&
                 <GameStats data={achievementData}/>}
@@ -26,6 +30,9 @@ export default function ExtendedStats({selectedCard}: { selectedCard: Tabs, }) {
 
             {selectedCard == Tabs.GAMES_WITHOUT_ACHIEVEMENTS &&
                 <GameStats data={achievementData.filter(game => hasNoAchievements(game))}/>}
+
+            {selectedCard == Tabs.COUNTS_TOWARD_GLOBAL &&
+                <GameStats data={achievementData.filter(game => hasAtLeastOneAchieved(game))}/>}
 
             {selectedCard == Tabs.IN_PROGRESS &&
                 <GameStats data={achievementData.filter(game => isInProgress(game))}/>}
@@ -37,7 +44,7 @@ export default function ExtendedStats({selectedCard}: { selectedCard: Tabs, }) {
                 <GameStats data={achievementData.filter(game => noProgress(game))}/>}
 
             {selectedCard == Tabs.ACHIEVEMENTS &&
-                <GenericStats/>}
+                <ProfileStats/>}
         </>
     )
 }

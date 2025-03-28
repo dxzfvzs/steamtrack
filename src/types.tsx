@@ -1,6 +1,7 @@
 export interface Achievement {
     achieved: boolean,
-    apiname: string,
+    name?: string,
+    description?: string,
 }
 
 export interface AchievementStats {

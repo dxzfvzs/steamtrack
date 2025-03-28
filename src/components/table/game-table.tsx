@@ -7,46 +7,21 @@ import NameCell from "@/components/table/cells/nameCell";
 import {useEffect, useState} from "react";
 import AchievementProgressCell from "@/components/table/cells/percentCell";
 import {AchievementData} from "@/types";
+import {ascendingDefaults, castTableData, TableGameData} from "@/components/table/table-helper";
 
 interface GameTableProps {
     data: AchievementData[]
 }
 
-interface GameData {
-    appid: number,
-    name: string,
-    playtime2Week: number,
-    playtimeForever: number,
-    progress: number,
-    achievedAchievements: number | undefined,
-    totalAchievements: number | undefined,
-}
-
-function castTableData(data: AchievementData[]): GameData[] {
-    return data.map((aData) => {
-        return {
-            appid: aData.game.appid,
-            name: aData.game.name,
-            playtime2Week: aData.game.playtime_2weeks,
-            playtimeForever: aData.game.playtime_forever,
-            progress: aData.achievementStats.progress,
-            achievedAchievements: aData.achievementStats.fullyLoaded ? aData.achievementStats.achieved : undefined,
-            totalAchievements: aData.achievementStats.fullyLoaded ? aData.achievementStats.total : undefined,
-        }
-    })
-}
-
-const ascendingDefaults = ["name"];
-
 export default function GameTable({data}: GameTableProps) {
-    const [sortConfig, setSortConfig] = useState<{ key: keyof GameData; ascending: boolean } | null>(null);
-    const [tableData, setTableData] = useState<GameData[]>(castTableData(data));
+    const [sortConfig, setSortConfig] = useState<{ key: keyof TableGameData; ascending: boolean } | null>(null);
+    const [tableData, setTableData] = useState<TableGameData[]>(castTableData(data));
 
     useEffect(() => {
         setTableData(castTableData(data));
     }, [data]);
 
-    const handleSort = (key: keyof GameData) => {
+    const handleSort = (key: keyof TableGameData) => {
         let ascending = sortConfig && sortConfig.key === key ? !sortConfig.ascending : ascendingDefaults.includes(key);
 
         const sortedData = [...tableData].sort((a, b) => {

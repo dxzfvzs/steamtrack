@@ -37,11 +37,87 @@
   cursor: pointer;
   font-weight: bold;
   color: var(--secondary);
-
-
 }
 
 .link:hover {
   text-decoration: underline;
   color: var(--accent-active);
+}
+
+.achievement-stats {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 1em;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 1em;
+  flex-direction: column;
+}
+
+.all-achievements-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  margin-left: 1em;
+  margin-top: 0.5em;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.single-achievements-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  margin: 0.5em 1em;
+}
+
+.achievement {
+  display: flex;
+  gap: 0.2em;
+  border-radius: var(--border-radius);
+  background: linear-gradient(to right, var(--secondary), var(--secondary-highlight));
+  text-align: center;
+  align-items: center;
+}
+
+.achievement-locked {
+  opacity: 0.2;
+}
+
+.achievement--description {
+  color: var(--subtle);
+  margin-left: 1em;
+  padding: 0.5em;
+}
+
+.achievement--tick {
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-size: 1.5em;
+  padding: 0.2em 0.5em;
+  height: 100%;
+}
+
+.achievement--tick-locked {
+  background: var(--secondary-highlight);
+  padding: 0.1em 0.5em;
+}
+
+.achievement--tick-achieved {
+  background: var(--secondary-highlight);
+  border: solid 2px var(--subtle);
+  animation: glimmer 2s infinite alternate;
+}
+
+@keyframes glimmer {
+  0% {
+    box-shadow: 0 0 5px var(--subtle);
+  }
+  50% {
+    box-shadow: 0 0 15px var(--subtle);
+  }
+  100% {
+    box-shadow: 0 0 5px var(--subtle);
+  }
 }

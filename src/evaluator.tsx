@@ -9,6 +9,10 @@ export const hasNoAchievements = (data: AchievementData): boolean => {
     return data.achievementStats.total == 0;
 };
 
+export const hasAtLeastOneAchieved = (data: AchievementData): boolean => {
+    return data.achievementStats.achieved > 0;
+};
+
 export const noProgress = (data: AchievementData): boolean => {
     return hasAchievements(data) && data.achievementStats.achieved == 0;
 };
