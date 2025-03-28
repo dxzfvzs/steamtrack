@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {getAllOwnedGames} from "@/api/all-games-fetcher";
+import {getAllUserGames} from "@/api/all-games-fetcher";
 import {getAchievementOfGame} from "@/api/achievement-fetcher";
 import {AchievementData, AchievementStats, Game} from "@/types";
 
@@ -15,7 +15,7 @@ export function useUserGames(userId?: string) {
         }
 
         const fetchUserGames = async () => {
-            const data = await getAllOwnedGames(userId);
+            const data = await getAllUserGames(userId);
             setUserGames(data.games);
             setAchievementData(data.games.map(game => {
                 return {
@@ -24,7 +24,7 @@ export function useUserGames(userId?: string) {
                         total: 0,
                         achieved: 0,
                         progress: 0,
-                        fullyLoaded: !game.has_community_visible_stats
+                        fullyLoaded: !game.has_community_visible_stats,
                     },
                 }
             }));
